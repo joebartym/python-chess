@@ -1,0 +1,98 @@
+#from math
+import random as rd
+import os
+
+def aff_intro():
+    # Affichage du bandeau d'introduction
+    intro = '''        ╚═╦═╝ ╬ ╚═╦═╝ ═══ ╚═╦═╝ ╬ ╚═╦═╝
+          ╚═══╩═══╝   ═══   ╚═══╩═══╝       
+    ╔╦╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦╗
+    ╠╠Bienvenue sur le tout nouveau memory╣╣
+    ╠╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╩╣
+                                            '''
+    return intro
+
+def aff_tableau(t):
+    # Affichage du tableau
+
+    for i in range(0,4):
+        print("┌───┐┌───┐┌───┐┌───┐┌───┐")
+        for j in range(0,5):
+            if t[i][j]== '?':
+                print("│ ? │",end='')
+            else:
+                print("│",t[i][j],"│",end='')
+        print()
+        print("└───┘└───┘└───┘└───┘└───┘")
+    return
+
+def test(b,w,x):
+    # vérification des entrées
+
+    if w<0 or x<0 or w>3 or x>4:
+        print("hors tableau ")
+        return False
+    if b[w][x]!= '?':
+        print("deja trouvé")
+        return False
+    return True
+
+def table_factory():
+    # fonction qui crée une grille de memory
+    
+    t=['0','1','2','3','4','5','6','7','8','9','0','1','2','3','4','5',
+    '6','7','8','9']
+
+    for i in range(400):
+        rand1=rd.randint(0,19)
+        rand2=rd.randint(0,19)
+        swap1=t[rand1]
+        swap2=t[rand2]
+        t[rand1]=swap2
+        t[rand2]=swap1
+
+    tab = [[t[0],t[1],t[2],t[3],t[4]],[t[5],t[6],t[7],t[8],t[9]],[t[10],t[11],t[12],t[13],t[14]],[t[15],t[16],t[17],t[18],t[19]]]
+    return tab
+
+def memory(a, b, tours = 20):
+    score = 0
+    paires = 10
+    while tours > 0:
+        Iom = input("Tour suivant : Entrée ")
+        os.system("clear")
+        aff_tableau(b)
+        c1_ligne = int(input("entrer la ligne de la première case : ")) - 1
+        c1_colonne = int(input("entrer la colonne de la première case : ")) - 1
+
+        if test(b, c1_ligne, c1_colonne) == True:
+            b[c1_ligne][c1_colonne] = a[c1_ligne][c1_colonne]
+            aff_tableau(b)
+            c2_ligne = int(input("entrer la ligne de la deuxieme case : ")) - 1
+            c2_colonne = int(input("entrer la colonne de la deuxieme case : ")) - 1
+            while test(b, c2_ligne, c2_colonne) == False or (c2_ligne == c1_ligne and c2_colonne == c1_colonne):
+                c2_ligne = int(input("entrer la ligne de la deuxieme case : ")) - 1
+                c2_colonne = int(input("entrer la colonne de la deuxieme case : ")) - 1
+            else:
+                b[c2_ligne][c2_colonne] = a[c2_ligne][c2_colonne]
+                aff_tableau(b)
+                if a[c1_ligne][c1_colonne] == a[c2_ligne][c2_colonne]:
+                    score = score + 1
+                    print("Trouvé. Paires restantes :", paires - score)
+                else:
+                    b[c1_ligne][c1_colonne] = "?"
+                    b[c2_ligne][c2_colonne] = "?"
+                    print("Raté. Tours restants :", tours - 1)
+                tours = tours - 1
+
+
+
+
+X=table_factory()
+Y=[["?","?","?","?",'?'],['?','?','?','?','?'],
+['?','?','?','?','?'],['?','?','?','?','?']]
+print()
+
+print(aff_intro())
+memory(X,Y)
+print("Perdu.")
+#  8=============================D
